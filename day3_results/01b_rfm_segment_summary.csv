@@ -1,0 +1,5 @@
+rfm_segment,customers,average_recency_days,average_frequency,total_monetary,average_monetary,customer_pct
+At Risk,451,62.25,91.17,4973920.25,11028.65,9.02
+Champions,794,8.71,103.88,10334071.35,13015.2,15.88
+Lost,2909,18.6,88.49,29328157.4,10081.87,58.18
+Loyal,846,32.97,102.56,10240720.93,12104.87,16.92

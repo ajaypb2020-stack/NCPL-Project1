@@ -1,0 +1,22 @@
+region,category,revenue,region_mix_pct
+Abu Dhabi,Electronics,11425390.84,55.75
+Abu Dhabi,Household,2291222.96,11.18
+Abu Dhabi,Personal Care,2290406.21,11.18
+Abu Dhabi,Grocery,1555182.42,7.59
+Abu Dhabi,Snacks,1206574.11,5.89
+Abu Dhabi,Dairy,1190941.98,5.81
+Abu Dhabi,Beverages,533931.44,2.61
+Dubai,Electronics,22865328.72,55.71
+Dubai,Household,4585093.42,11.17
+Dubai,Personal Care,4576864.13,11.15
+Dubai,Grocery,3128631.14,7.62
+Dubai,Snacks,2438815.34,5.94
+Dubai,Dairy,2372144.35,5.78
+Dubai,Beverages,1077969.26,2.63
+Sharjah,Electronics,6504074.32,55.7
+Sharjah,Personal Care,1314821.58,11.26
+Sharjah,Household,1314717.06,11.26
+Sharjah,Grocery,881182.33,7.55
+Sharjah,Snacks,676027.95,5.79
+Sharjah,Dairy,675310.25,5.78
+Sharjah,Beverages,310301.49,2.66
