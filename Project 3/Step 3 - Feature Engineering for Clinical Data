@@ -1,0 +1,163 @@
+"""
+Step 3 - Feature Engineering for Clinical Data
+Loads outputs/data_cleaned.csv, derives clinical features, saves outputs/data_engineered.csv
+"""
+import os
+import sys
+import traceback
+import pandas as pd
+import numpy as np
+
+DATA_PATH = 'outputs/data_cleaned.csv'
+OUTPUT_DIR = 'outputs'
+OUTPUT_PATH = f'{OUTPUT_DIR}/data_engineered.csv'
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+print("=" * 80)
+print("STEP 3: FEATURE ENGINEERING")
+print("=" * 80)
+
+if not os.path.exists(DATA_PATH):
+    print(f'ERROR: File not found: {DATA_PATH}')
+    sys.exit(1)
+
+try:
+    df = pd.read_csv(DATA_PATH)
+    print(f'✓ Loaded {DATA_PATH} -> shape {df.shape}')
+except Exception as e:
+    print(f'ERROR loading file: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+new_features = []
+
+# ---- Feature 1: Kidney Function Category ----
+# eGFR (estimated Glomerular Filtration Rate): >=90 Normal, 60-89 Mild, 30-59 Moderate, <30 Severe
+try:
+    if 'eGFR' in df.columns:
+        def kidney_stage(egfr):
+            if pd.isna(egfr):
+                return 'Unknown'
+            if egfr >= 90:
+                return 'Normal'
+            elif egfr >= 60:
+                return 'Mild'
+            elif egfr >= 30:
+                return 'Moderate'
+            else:
+                return 'Severe'
+        df['kidney_stage'] = df['eGFR'].apply(kidney_stage)
+        new_features.append('kidney_stage')
+        print('✓ Created kidney_stage')
+    else:
+        print('WARNING: eGFR column not found; skipping kidney_stage')
+except Exception as e:
+    print(f'ERROR creating kidney_stage: {e}')
+    traceback.print_exc()
+
+# ---- Feature 2: Liver Risk Flag ----
+# ALT > 40 OR AST > 40 indicates potential liver issues
+try:
+    if 'ALT_Enzyme' in df.columns and 'AST_Enzyme' in df.columns:
+        df['liver_risk'] = ((df['ALT_Enzyme'] > 40) | (df['AST_Enzyme'] > 40)).astype(int)
+        new_features.append('liver_risk')
+        print('✓ Created liver_risk')
+    else:
+        print('WARNING: ALT_Enzyme/AST_Enzyme not found; skipping liver_risk')
+except Exception as e:
+    print(f'ERROR creating liver_risk: {e}')
+    traceback.print_exc()
+
+# ---- Feature 3: Polypharmacy Flag ----
+# Taking 5+ concurrent medications increases ADR risk significantly
+try:
+    if 'Concurrent_Drugs' in df.columns:
+        df['polypharmacy'] = (df['Concurrent_Drugs'] >= 5).astype(int)
+        new_features.append('polypharmacy')
+        print('✓ Created polypharmacy')
+    else:
+        print('WARNING: Concurrent_Drugs not found; skipping polypharmacy')
+except Exception as e:
+    print(f'ERROR creating polypharmacy: {e}')
+    traceback.print_exc()
+
+# ---- Feature 4: BMI Category ----
+try:
+    if 'BMI' in df.columns:
+        def bmi_category(bmi):
+            if pd.isna(bmi):
+                return 'Unknown'
+            if bmi < 18.5:
+                return 'Underweight'
+            elif bmi < 25:
+                return 'Normal'
+            elif bmi < 30:
+                return 'Overweight'
+            else:
+                return 'Obese'
+        df['bmi_category'] = df['BMI'].apply(bmi_category)
+        new_features.append('bmi_category')
+        print('✓ Created bmi_category')
+    else:
+        print('WARNING: BMI column not found; skipping bmi_category')
+except Exception as e:
+    print(f'ERROR creating bmi_category: {e}')
+    traceback.print_exc()
+
+# ---- Feature 5: Age Group ----
+try:
+    if 'Age' in df.columns:
+        df['age_group'] = pd.cut(df['Age'], bins=[0, 18, 40, 60, 80, 120],
+                                  labels=['Pediatric', 'Young Adult', 'Middle Aged',
+                                          'Senior', 'Elderly'])
+        new_features.append('age_group')
+        print('✓ Created age_group')
+    else:
+        print('WARNING: Age column not found; skipping age_group')
+except Exception as e:
+    print(f'ERROR creating age_group: {e}')
+    traceback.print_exc()
+
+# ---- Feature 6: Drug-Age Interaction ----
+# Some drugs are more risky for elderly patients on higher doses
+try:
+    if 'Age' in df.columns and 'Dosage' in df.columns:
+        median_dosage = df['Dosage'].median()
+        df['elderly_high_dose'] = ((df['Age'] > 65) & (df['Dosage'] > median_dosage)).astype(int)
+        new_features.append('elderly_high_dose')
+        print('✓ Created elderly_high_dose')
+    else:
+        print('WARNING: Age/Dosage not found; skipping elderly_high_dose')
+except Exception as e:
+    print(f'ERROR creating elderly_high_dose: {e}')
+    traceback.print_exc()
+
+# ---- Feature 7: Lab Value Ratios ----
+# AST/ALT ratio (De Ritis ratio) > 2 suggests alcoholic liver disease
+try:
+    if 'AST_Enzyme' in df.columns and 'ALT_Enzyme' in df.columns:
+        df['de_ritis_ratio'] = df['AST_Enzyme'] / (df['ALT_Enzyme'] + 0.01)  # avoid div by zero
+        new_features.append('de_ritis_ratio')
+        print('✓ Created de_ritis_ratio')
+    else:
+        print('WARNING: AST_Enzyme/ALT_Enzyme not found; skipping de_ritis_ratio')
+except Exception as e:
+    print(f'ERROR creating de_ritis_ratio: {e}')
+    traceback.print_exc()
+
+print(f'\nFeatures after engineering: {df.shape[1]} columns')
+print('New features added:', new_features)
+
+try:
+    df.to_csv(OUTPUT_PATH, index=False)
+    print(f'\n✓ Saved engineered data: {OUTPUT_PATH}')
+    print(f'Final shape: {df.shape}')
+except Exception as e:
+    print(f'ERROR saving engineered data: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+print('\n' + '=' * 80)
+print('✓ STEP 3: FEATURE ENGINEERING COMPLETE')
+print('=' * 80)
+print('\nNext: Run Step 4 - Model Training & Evaluation')

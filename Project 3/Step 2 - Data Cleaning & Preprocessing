@@ -1,0 +1,237 @@
+"""
+Step 2 - Data Cleaning & Preprocessing for Clinical Data
+Loads raw patient data, cleans it, and saves outputs/data_cleaned.csv
+"""
+import os
+import sys
+import traceback
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+
+# ---- Configuration ----
+DATA_PATH = 'outputs/clinical_data_raw.csv'
+OUTPUT_DIR = 'outputs'
+OUTPUT_PATH = f'{OUTPUT_DIR}/data_cleaned.csv'
+TARGET = 'Readmission_30d'
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+print("=" * 80)
+print("STEP 2: DATA CLEANING & PREPROCESSING")
+print("=" * 80)
+
+# ---- Load Data ----
+if not os.path.exists(DATA_PATH):
+    print(f'ERROR: File not found: {DATA_PATH}')
+    sys.exit(1)
+
+try:
+    df = pd.read_csv(DATA_PATH)
+    print(f'✓ Loaded {DATA_PATH} -> shape {df.shape}')
+except Exception as e:
+    print(f'ERROR loading file: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+print('\nMissing values before cleaning:')
+print(df.isnull().sum())
+
+# ==========================================================================
+# PHASE 1: COLUMN REDUCTION
+# ==========================================================================
+print('\n' + '=' * 80)
+print('PHASE 1: COLUMN REDUCTION')
+print('=' * 80)
+
+try:
+    # Drop entirely-null / index columns
+    drop_null_cols = [c for c in ['Extra_Col_1', 'Extra_Col_2', 'unnamed_0'] if c in df.columns]
+    # Drop high-null columns
+    drop_high_null_cols = [c for c in ['Notes', 'Alcohol_Use', 'Admission_Date'] if c in df.columns]
+    # Drop redundant duplicate/lowercase columns (keep the uppercase/canonical version)
+    drop_redundant_cols = [c for c in ['patient_id', ' age', 'gender', 'drug_name',
+                                       'Weight_lbs', 'blood_pressure'] if c in df.columns]
+
+    cols_to_drop = drop_null_cols + drop_high_null_cols + drop_redundant_cols
+    if cols_to_drop:
+        df = df.drop(columns=cols_to_drop)
+        print(f'✓ Dropped columns: {cols_to_drop}')
+
+    print(f'Shape after column reduction: {df.shape}')
+except Exception as e:
+    print(f'ERROR during column reduction: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+# ==========================================================================
+# PHASE 2: DATA VALIDATION
+# ==========================================================================
+print('\n' + '=' * 80)
+print('PHASE 2: DATA VALIDATION')
+print('=' * 80)
+
+try:
+    before = len(df)
+
+    if 'Age' in df.columns:
+        df = df[(df['Age'].isna()) | ((df['Age'] >= 0) & (df['Age'] <= 120))]
+        print(f'✓ Removed invalid Age rows (kept 0-120 or missing)')
+
+    if 'Weight_kg' in df.columns:
+        df = df[(df['Weight_kg'].isna()) | ((df['Weight_kg'] >= 30) & (df['Weight_kg'] <= 200))]
+        print(f'✓ Removed invalid Weight_kg rows (kept 30-200 or missing)')
+
+    # Convert Dosage / Duration_Days text fields to numeric where possible
+    for col in ['Dosage', 'Duration_Days']:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col].astype(str).str.extract(r'([\d.]+)')[0], errors='coerce')
+            print(f'✓ Converted {col} to numeric')
+
+    # Standardize Gender values
+    if 'Gender' in df.columns:
+        df['Gender'] = df['Gender'].astype(str).str.strip().str.upper().replace({
+            'M': 'Male', 'MALE': 'Male', 'F': 'Female', 'FEMALE': 'Female',
+            'NAN': np.nan
+        })
+        print(f'✓ Standardized Gender values: {df["Gender"].unique().tolist()}')
+
+    print(f'Shape after validation: {df.shape} (removed {before - len(df)} rows)')
+except Exception as e:
+    print(f'ERROR during data validation: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+# ==========================================================================
+# PHASE 3: MISSING VALUE HANDLING
+# ==========================================================================
+print('\n' + '=' * 80)
+print('PHASE 3: MISSING VALUE HANDLING')
+print('=' * 80)
+
+try:
+    # Drop rows with a missing target - can't use unlabeled rows for supervised learning
+    if TARGET in df.columns:
+        before = len(df)
+        df = df.dropna(subset=[TARGET])
+        print(f'✓ Dropped {before - len(df)} rows with missing target ({TARGET})')
+    else:
+        print(f'WARNING: Target column "{TARGET}" not found; skipping target-based row drop')
+
+    id_like_cols = {'Patient_ID'}
+
+    numeric_cols = [c for c in df.select_dtypes(include='number').columns if c not in id_like_cols]
+    for col in numeric_cols:
+        if df[col].isnull().sum() > 0:
+            median_val = df[col].median()
+            df[col] = df[col].fillna(median_val)
+            print(f'  Filled {col} with median={median_val:.2f}')
+
+    cat_cols = df.select_dtypes(include='object').columns
+    for col in cat_cols:
+        if df[col].isnull().sum() > 0:
+            mode_series = df[col].mode()
+            mode_val = mode_series[0] if len(mode_series) > 0 else 'Unknown'
+            df[col] = df[col].fillna(mode_val)
+            print(f'  Filled {col} with mode={mode_val}')
+
+    # Remove duplicate rows
+    dupes = df.duplicated().sum()
+    print(f'\nDuplicate rows: {dupes}')
+    df = df.drop_duplicates()
+    print(f'Shape after removing duplicates: {df.shape}')
+except Exception as e:
+    print(f'ERROR during missing value handling: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+# ==========================================================================
+# OUTLIER CAPPING
+# ==========================================================================
+print('\n' + '=' * 80)
+print('OUTLIER CAPPING (IQR method)')
+print('=' * 80)
+
+def cap_outliers(df, col):
+    """Cap extreme values using IQR method."""
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+    before = ((df[col] < lower) | (df[col] > upper)).sum()
+    df[col] = df[col].clip(lower, upper)
+    print(f'  {col}: capped {before} outliers to [{lower:.2f}, {upper:.2f}]')
+    return df
+
+try:
+    clinical_cols = ['Age', 'BMI', 'Dosage', 'Hemoglobin', 'Creatinine', 'ALT_Enzyme', 'AST_Enzyme']
+    for col in clinical_cols:
+        if col in df.columns:
+            df = cap_outliers(df, col)
+except Exception as e:
+    print(f'ERROR during outlier capping: {e}')
+    traceback.print_exc()
+
+# ==========================================================================
+# ENCODING
+# ==========================================================================
+print('\n' + '=' * 80)
+print('ENCODING CATEGORICAL FEATURES')
+print('=' * 80)
+
+try:
+    if 'Gender' in df.columns:
+        le = LabelEncoder()
+        df['Gender_encoded'] = le.fit_transform(df['Gender'].astype(str))
+        print(f'✓ Label-encoded Gender -> {dict(zip(le.classes_, le.transform(le.classes_)))}')
+
+    onehot_cols = [c for c in ['Drug_Name', 'Route'] if c in df.columns]
+    if onehot_cols:
+        df = pd.get_dummies(df, columns=onehot_cols, drop_first=True)
+        print(f'✓ One-hot encoded: {onehot_cols}')
+
+    print(f'Shape after encoding: {df.shape}')
+except Exception as e:
+    print(f'ERROR during encoding: {e}')
+    traceback.print_exc()
+
+# ==========================================================================
+# SCALING
+# ==========================================================================
+print('\n' + '=' * 80)
+print('SCALING NUMERIC FEATURES')
+print('=' * 80)
+
+try:
+    scale_cols = [c for c in ['Age', 'BMI', 'Dosage', 'Hemoglobin', 'Creatinine', 'eGFR', 'HbA1c']
+                  if c in df.columns]
+    if scale_cols:
+        scaler = StandardScaler()
+        df[scale_cols] = scaler.fit_transform(df[scale_cols])
+        print(f'✓ Scaled columns: {scale_cols}')
+    else:
+        print('No columns available to scale')
+except Exception as e:
+    print(f'ERROR during scaling: {e}')
+    traceback.print_exc()
+
+# ==========================================================================
+# SAVE
+# ==========================================================================
+print('\n' + '=' * 80)
+print('SAVING CLEANED DATA')
+print('=' * 80)
+
+try:
+    df.to_csv(OUTPUT_PATH, index=False)
+    print(f'✓ Saved cleaned data: {OUTPUT_PATH}')
+    print(f'Final shape: {df.shape}')
+except Exception as e:
+    print(f'ERROR saving cleaned data: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+print('\n' + '=' * 80)
+print('✓ STEP 2: DATA CLEANING COMPLETE')
+print('=' * 80)
+print('\nNext: Run Step 3 - Model Training & Evaluation')

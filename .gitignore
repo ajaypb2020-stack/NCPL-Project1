@@ -1,0 +1,8 @@
+gsk_env/
+__pycache__/
+*.pyc
+*.log
+outputs.zip
+outputs/clinical_data_raw.csv
+outputs/data_cleaned.csv
+outputs/data_engineered.csv
