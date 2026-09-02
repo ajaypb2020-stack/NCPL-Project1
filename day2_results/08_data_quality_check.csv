@@ -1,0 +1,9 @@
+table_name,field_name,issue_count,check_description
+bm_sales,customer_id,159821,nullable customer ID
+bm_sales,quantity,0,must be positive
+bm_sales,unit_price,0,must be non-negative
+bm_sales,total_value,0,must be non-negative
+bm_sales,discount_pct,0,must be 0 to 100
+bm_sales,store_id FK,0,missing store reference
+bm_sales,sku_id FK,0,missing SKU reference
+bm_customers,cust_id duplicate,0,duplicate primary key values

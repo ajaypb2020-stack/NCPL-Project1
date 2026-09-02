@@ -1,0 +1,10 @@
+metric_name,metric_value,metric_unit,metric_notes
+total_revenue,73214931.3,AED,Sum of monthly revenue across all months
+latest_month,2025-10,month,Most recent month in dataset
+latest_month_revenue,771516.47,AED,Revenue in most recent month
+highest_revenue_region,Dubai,region,Region with maximum total revenue
+highest_revenue_region_value,41044846.36,AED,Total revenue for top region
+champions_customers,794,customers,RFM segment count
+champions_pct,15.88,percent,Champions share of customer base
+latest_yoy_growth_pct,-14.83,percent,Latest year-over-year revenue growth
+repeat_purchase_rate_pct,100.0,percent,Customers with >=2 distinct purchase days

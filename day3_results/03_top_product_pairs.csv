@@ -1,0 +1,51 @@
+sku_id_1,sku_id_2,purchase_occasions,customers,product_1,product_2
+1141,1155,6,6,Beverages_Coffee_1141,Electronics_Mobile Accessories_1155
+1021,1132,5,5,Grocery_Canned Goods_1021,Dairy_Butter_1132
+1024,1141,5,5,Grocery_Canned Goods_1024,Beverages_Coffee_1141
+1027,1168,5,5,Snacks_Chips_1027,Snacks_Chips_1168
+1027,1196,5,5,Snacks_Chips_1027,Grocery_Pasta_1196
+1040,1192,5,5,Electronics_Mobile Accessories_1040,Dairy_Milk_1192
+1077,1181,5,5,Household_Cleaning Supplies_1077,Personal Care_Soap_1181
+1078,1199,5,5,Electronics_Cables_1078,Electronics_Cables_1199
+1104,1135,5,5,Grocery_Pasta_1104,Household_Trash Bags_1135
+1129,1196,5,5,Electronics_Chargers_1129,Grocery_Pasta_1196
+1130,1181,5,5,Snacks_Nuts_1130,Personal Care_Soap_1181
+1134,1144,5,5,Household_Paper Products_1134,Household_Detergent_1144
+1002,1103,4,4,Dairy_Cream_1002,Dairy_Milk_1103
+1002,1153,4,4,Dairy_Cream_1002,Electronics_Batteries_1153
+1003,1052,4,4,Household_Cleaning Supplies_1003,Snacks_Crackers_1052
+1003,1178,4,4,Household_Cleaning Supplies_1003,Beverages_Soft Drinks_1178
+1004,1159,4,4,Beverages_Juices_1004,Electronics_Batteries_1159
+1007,1069,4,4,Personal Care_Shampoo_1007,Grocery_Spices_1069
+1007,1070,4,4,Personal Care_Shampoo_1007,Grocery_Canned Goods_1070
+1008,1064,4,4,Personal Care_Shampoo_1008,Snacks_Biscuits_1064
+1011,1053,4,4,Personal Care_Shampoo_1011,Snacks_Crackers_1053
+1011,1063,4,4,Personal Care_Shampoo_1011,Snacks_Chocolates_1063
+1013,1060,4,4,Grocery_Cereals_1013,Household_Detergent_1060
+1013,1165,4,4,Grocery_Cereals_1013,Personal Care_Skincare_1165
+1014,1081,4,4,Dairy_Butter_1014,Snacks_Nuts_1081
+1014,1125,4,4,Dairy_Butter_1014,Personal Care_Toothpaste_1125
+1015,1050,4,4,Dairy_Cream_1015,Snacks_Chips_1050
+1016,1060,4,4,Grocery_Rice_1016,Household_Detergent_1060
+1016,1118,4,4,Grocery_Rice_1016,Dairy_Milk_1118
+1018,1187,4,4,Personal Care_Deodorant_1018,Personal Care_Skincare_1187
+1019,1065,4,4,Electronics_Cables_1019,Electronics_Chargers_1065
+1019,1071,4,4,Electronics_Cables_1019,Grocery_Canned Goods_1071
+1019,1099,4,4,Electronics_Cables_1019,Personal Care_Toothpaste_1099
+1023,1054,4,4,Personal Care_Toothpaste_1023,Snacks_Chips_1054
+1023,1056,4,4,Personal Care_Toothpaste_1023,Snacks_Nuts_1056
+1023,1058,4,4,Personal Care_Toothpaste_1023,Personal Care_Soap_1058
+1024,1112,4,4,Grocery_Canned Goods_1024,Household_Paper Products_1112
+1027,1050,4,4,Snacks_Chips_1027,Snacks_Chips_1050
+1028,1065,4,4,Household_Paper Products_1028,Electronics_Chargers_1065
+1028,1182,4,4,Household_Paper Products_1028,Beverages_Tea_1182
+1029,1062,4,4,Grocery_Canned Goods_1029,Personal Care_Deodorant_1062
+1031,1087,4,4,Snacks_Chips_1031,Snacks_Crackers_1087
+1032,1072,4,4,Snacks_Chocolates_1032,Electronics_Chargers_1072
+1033,1106,4,4,Household_Paper Products_1033,Snacks_Chocolates_1106
+1033,1116,4,4,Household_Paper Products_1033,Personal Care_Skincare_1116
+1034,1074,4,4,Household_Cleaning Supplies_1034,Personal Care_Skincare_1074
+1036,1082,4,4,Electronics_Mobile Accessories_1036,Household_Detergent_1082
+1038,1162,4,4,Electronics_Cables_1038,Dairy_Yogurt_1162
+1039,1064,4,4,Beverages_Soft Drinks_1039,Snacks_Biscuits_1064
+1040,1062,4,4,Electronics_Mobile Accessories_1040,Personal Care_Deodorant_1062

@@ -1,0 +1,87 @@
+sku_id,latest_month,latest_units,latest_revenue,prior_units,prior_revenue,sku_name,category,unit_change_pct
+1154,2025-10-01,56,889.84,110.0,1747.9,Household_Cleaning Supplies_1154,Household,-49.09
+1147,2025-10-01,60,1244.4,105.0,2177.7,Snacks_Crackers_1147,Snacks,-42.86
+1155,2025-10-01,47,1075.36,81.0,1853.28,Electronics_Mobile Accessories_1155,Electronics,-41.98
+1053,2025-10-01,57,664.05,96.0,1118.4,Snacks_Crackers_1053,Snacks,-40.62
+1111,2025-10-01,54,678.24,90.0,1130.4,Snacks_Nuts_1111,Snacks,-40.0
+1069,2025-10-01,76,2910.8,121.0,4634.3,Grocery_Spices_1069,Grocery,-37.19
+1036,2025-10-01,57,5100.36,90.0,8053.2,Electronics_Mobile Accessories_1036,Electronics,-36.67
+1199,2025-10-01,75,17241.75,117.0,26897.13,Electronics_Cables_1199,Electronics,-35.9
+1019,2025-10-01,61,12923.46,94.0,19914.84,Electronics_Cables_1019,Electronics,-35.11
+1082,2025-10-01,76,3394.16,115.0,5135.9,Household_Detergent_1082,Household,-33.91
+1016,2025-10-01,67,1302.48,100.0,1944.0,Grocery_Rice_1016,Grocery,-33.0
+1162,2025-10-01,58,1531.2,86.0,2270.4,Dairy_Yogurt_1162,Dairy,-32.56
+1102,2025-10-01,73,1572.42,107.0,2304.78,Snacks_Biscuits_1102,Snacks,-31.78
+1021,2025-10-01,60,1729.8,87.0,2508.21,Grocery_Canned Goods_1021,Grocery,-31.03
+1048,2025-10-01,62,859.94,89.0,1234.43,Snacks_Biscuits_1048,Snacks,-30.34
+1166,2025-10-01,88,4340.16,126.0,6214.32,Grocery_Spices_1166,Grocery,-30.16
+1189,2025-10-01,68,5303.32,97.0,7565.03,Electronics_Batteries_1189,Electronics,-29.9
+1074,2025-10-01,81,5076.27,113.0,7081.71,Personal Care_Skincare_1074,Personal Care,-28.32
+1165,2025-10-01,75,1297.5,103.0,1781.9,Personal Care_Skincare_1165,Personal Care,-27.18
+1063,2025-10-01,62,1005.64,84.0,1362.48,Snacks_Chocolates_1063,Snacks,-26.19
+1047,2025-10-01,68,2455.48,92.0,3322.12,Household_Detergent_1047,Household,-26.09
+1121,2025-10-01,58,1849.04,78.0,2486.64,Grocery_Rice_1121,Grocery,-25.64
+1116,2025-10-01,72,5624.64,95.0,7421.4,Personal Care_Skincare_1116,Personal Care,-24.21
+1179,2025-10-01,67,1932.28,88.0,2537.92,Household_Cleaning Supplies_1179,Household,-23.86
+1078,2025-10-01,83,14917.59,109.0,19590.57,Electronics_Cables_1078,Electronics,-23.85
+1108,2025-10-01,78,3066.96,101.0,3971.32,Dairy_Butter_1108,Dairy,-22.77
+1194,2025-10-01,77,741.51,99.0,953.37,Dairy_Butter_1194,Dairy,-22.22
+1142,2025-10-01,71,1110.44,91.0,1423.24,Electronics_Mobile Accessories_1142,Electronics,-21.98
+1034,2025-10-01,79,4547.24,100.0,5756.0,Household_Cleaning Supplies_1034,Household,-21.0
+1044,2025-10-01,68,1481.72,86.0,1873.94,Snacks_Biscuits_1044,Snacks,-20.93
+1182,2025-10-01,71,995.42,89.0,1247.78,Beverages_Tea_1182,Beverages,-20.22
+1171,2025-10-01,89,3708.63,109.0,4542.03,Personal Care_Toothpaste_1171,Personal Care,-18.35
+1005,2025-10-01,84,1486.8,102.0,1805.4,Household_Paper Products_1005,Household,-17.65
+1072,2025-10-01,77,18346.02,93.0,22158.18,Electronics_Chargers_1072,Electronics,-17.2
+1127,2025-10-01,64,1307.52,77.0,1573.11,Grocery_Rice_1127,Grocery,-16.88
+1188,2025-10-01,71,1446.98,85.0,1732.3,Grocery_Spices_1188,Grocery,-16.47
+1065,2025-10-01,72,12803.76,86.0,15293.38,Electronics_Chargers_1065,Electronics,-16.28
+1197,2025-10-01,85,1494.3,101.0,1775.58,Electronics_Mobile Accessories_1197,Electronics,-15.84
+1164,2025-10-01,80,15699.2,95.0,18642.8,Electronics_Cables_1164,Electronics,-15.79
+1186,2025-10-01,86,469.56,102.0,556.92,Dairy_Yogurt_1186,Dairy,-15.69
+1007,2025-10-01,81,5448.06,96.0,6456.96,Personal Care_Shampoo_1007,Personal Care,-15.62
+1138,2025-10-01,76,3517.28,90.0,4165.2,Household_Cleaning Supplies_1138,Household,-15.56
+1085,2025-10-01,78,2077.14,92.0,2449.96,Personal Care_Skincare_1085,Personal Care,-15.22
+1126,2025-10-01,85,2184.5,99.0,2544.3,Beverages_Soft Drinks_1126,Beverages,-14.14
+1055,2025-10-01,61,679.54,71.0,790.94,Dairy_Butter_1055,Dairy,-14.08
+1160,2025-10-01,64,395.52,74.0,457.32,Snacks_Nuts_1160,Snacks,-13.51
+1025,2025-10-01,86,729.28,99.0,839.52,Household_Detergent_1025,Household,-13.13
+1119,2025-10-01,82,2957.74,93.0,3354.51,Grocery_Pasta_1119,Grocery,-11.83
+1177,2025-10-01,75,213.0,85.0,241.4,Snacks_Chips_1177,Snacks,-11.76
+1081,2025-10-01,71,714.26,80.0,804.8,Snacks_Nuts_1081,Snacks,-11.25
+1100,2025-10-01,81,1475.01,91.0,1657.11,Electronics_Mobile Accessories_1100,Electronics,-10.99
+1066,2025-10-01,68,3385.04,76.0,3783.28,Household_Cleaning Supplies_1066,Household,-10.53
+1122,2025-10-01,68,2148.8,76.0,2401.6,Dairy_Yogurt_1122,Dairy,-10.53
+1161,2025-10-01,78,6447.48,87.0,7191.42,Electronics_Batteries_1161,Electronics,-10.34
+1145,2025-10-01,78,893.88,87.0,997.02,Household_Trash Bags_1145,Household,-10.34
+1057,2025-10-01,70,1885.8,78.0,2101.32,Beverages_Tea_1057,Beverages,-10.26
+1168,2025-10-01,81,1548.72,90.0,1720.8,Snacks_Chips_1168,Snacks,-10.0
+1192,2025-10-01,73,1603.81,81.0,1779.57,Dairy_Milk_1192,Dairy,-9.88
+1137,2025-10-01,66,443.52,73.0,490.56,Snacks_Nuts_1137,Snacks,-9.59
+1187,2025-10-01,58,4138.3,64.0,4566.4,Personal Care_Skincare_1187,Personal Care,-9.38
+1059,2025-10-01,82,1740.86,90.0,1910.7,Electronics_Cables_1059,Electronics,-8.89
+1084,2025-10-01,72,3448.08,79.0,3783.31,Household_Paper Products_1084,Household,-8.86
+1143,2025-10-01,84,1445.64,92.0,1583.32,Dairy_Cheese_1143,Dairy,-8.7
+1018,2025-10-01,88,4854.08,96.0,5295.36,Personal Care_Deodorant_1018,Personal Care,-8.33
+1132,2025-10-01,79,2747.62,86.0,2991.08,Dairy_Butter_1132,Dairy,-8.14
+1150,2025-10-01,81,10784.34,88.0,11716.32,Electronics_Batteries_1150,Electronics,-7.95
+1110,2025-10-01,70,1288.7,76.0,1399.16,Grocery_Canned Goods_1110,Grocery,-7.89
+1096,2025-10-01,76,8610.04,82.0,9289.78,Electronics_Mobile Accessories_1096,Electronics,-7.32
+1011,2025-10-01,86,1751.82,92.0,1874.04,Personal Care_Shampoo_1011,Personal Care,-6.52
+1050,2025-10-01,87,1552.08,93.0,1659.12,Snacks_Chips_1050,Snacks,-6.45
+1051,2025-10-01,76,5422.6,81.0,5779.35,Electronics_Cables_1051,Electronics,-6.17
+1191,2025-10-01,93,920.7,99.0,980.1,Dairy_Butter_1191,Dairy,-6.06
+1104,2025-10-01,78,1647.36,83.0,1752.96,Grocery_Pasta_1104,Grocery,-6.02
+1173,2025-10-01,107,17503.06,113.0,18484.54,Electronics_Batteries_1173,Electronics,-5.31
+1178,2025-10-01,80,1915.2,84.0,2010.96,Beverages_Soft Drinks_1178,Beverages,-4.76
+1080,2025-10-01,76,1691.0,79.0,1757.75,Snacks_Chips_1080,Snacks,-3.8
+1024,2025-10-01,86,755.94,89.0,782.31,Grocery_Canned Goods_1024,Grocery,-3.37
+1071,2025-10-01,94,516.06,97.0,532.53,Grocery_Canned Goods_1071,Grocery,-3.09
+1113,2025-10-01,80,2023.2,82.0,2073.78,Dairy_Cheese_1113,Dairy,-2.44
+1061,2025-10-01,84,4520.88,86.0,4628.52,Personal Care_Skincare_1061,Personal Care,-2.33
+1157,2025-10-01,90,1316.7,92.0,1345.96,Household_Cleaning Supplies_1157,Household,-2.17
+1041,2025-10-01,98,1348.48,100.0,1376.0,Snacks_Nuts_1041,Snacks,-2.0
+1149,2025-10-01,74,7664.92,75.0,7768.5,Electronics_Chargers_1149,Electronics,-1.33
+1062,2025-10-01,83,2421.94,84.0,2451.12,Personal Care_Deodorant_1062,Personal Care,-1.19
+1123,2025-10-01,86,844.52,87.0,854.34,Beverages_Water_1123,Beverages,-1.15
+1112,2025-10-01,90,934.2,91.0,944.58,Household_Paper Products_1112,Household,-1.1

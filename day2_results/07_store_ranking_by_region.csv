@@ -1,0 +1,51 @@
+region,store_id,store_name,store_type,revenue,region_rank
+Abu Dhabi,49,BlueMart Store 49,Mall,1494703.15,1
+Abu Dhabi,4,BlueMart Store 04,Community,1492571.17,2
+Abu Dhabi,18,BlueMart Store 18,Community,1478034.92,3
+Abu Dhabi,29,BlueMart Store 29,Mall,1474651.26,4
+Abu Dhabi,48,BlueMart Store 48,High Street,1471703.45,5
+Abu Dhabi,31,BlueMart Store 31,Community,1471607.81,6
+Abu Dhabi,21,BlueMart Store 21,High Street,1464535.18,7
+Abu Dhabi,26,BlueMart Store 26,High Street,1462975.24,8
+Abu Dhabi,46,BlueMart Store 46,High Street,1462555.07,9
+Abu Dhabi,10,BlueMart Store 10,Mall,1461350.19,10
+Abu Dhabi,28,BlueMart Store 28,Mall,1453566.54,11
+Abu Dhabi,9,BlueMart Store 09,Mall,1443590.54,12
+Abu Dhabi,39,BlueMart Store 39,Community,1436763.98,13
+Abu Dhabi,3,BlueMart Store 03,Community,1425041.46,14
+Dubai,41,BlueMart Store 41,Mall,1500116.76,1
+Dubai,11,BlueMart Store 11,Mall,1496556.02,2
+Dubai,37,BlueMart Store 37,High Street,1489346.54,3
+Dubai,17,BlueMart Store 17,Mall,1484028.19,4
+Dubai,19,BlueMart Store 19,Mall,1481150.23,5
+Dubai,50,BlueMart Store 50,Mall,1480931.59,6
+Dubai,7,BlueMart Store 07,Mall,1480498.17,7
+Dubai,32,BlueMart Store 32,High Street,1478497.21,8
+Dubai,24,BlueMart Store 24,Community,1476225.64,9
+Dubai,5,BlueMart Store 05,High Street,1474363.79,10
+Dubai,15,BlueMart Store 15,Mall,1474126.03,11
+Dubai,14,BlueMart Store 14,Mall,1473495.66,12
+Dubai,40,BlueMart Store 40,High Street,1468170.08,13
+Dubai,6,BlueMart Store 06,Community,1467798.01,14
+Dubai,16,BlueMart Store 16,High Street,1466637.19,15
+Dubai,33,BlueMart Store 33,Mall,1466636.86,16
+Dubai,45,BlueMart Store 45,High Street,1461358.23,17
+Dubai,22,BlueMart Store 22,Mall,1458688.43,18
+Dubai,25,BlueMart Store 25,High Street,1456647.27,19
+Dubai,43,BlueMart Store 43,High Street,1455921.49,20
+Dubai,38,BlueMart Store 38,High Street,1453941.31,21
+Dubai,30,BlueMart Store 30,Mall,1452789.75,22
+Dubai,47,BlueMart Store 47,High Street,1449578.4,23
+Dubai,20,BlueMart Store 20,Community,1448731.12,24
+Dubai,23,BlueMart Store 23,Mall,1446505.64,25
+Dubai,1,BlueMart Store 01,Community,1439728.89,26
+Dubai,27,BlueMart Store 27,High Street,1431269.66,27
+Dubai,42,BlueMart Store 42,High Street,1431108.2,28
+Sharjah,44,BlueMart Store 44,High Street,1493356.5,1
+Sharjah,35,BlueMart Store 35,Mall,1486622.3,2
+Sharjah,8,BlueMart Store 08,Mall,1486432.9,3
+Sharjah,13,BlueMart Store 13,Community,1464331.36,4
+Sharjah,34,BlueMart Store 34,Mall,1444785.92,5
+Sharjah,36,BlueMart Store 36,Mall,1437266.49,6
+Sharjah,2,BlueMart Store 02,High Street,1435321.93,7
+Sharjah,12,BlueMart Store 12,Mall,1428317.58,8
