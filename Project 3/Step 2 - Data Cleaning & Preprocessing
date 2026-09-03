@@ -12,7 +12,7 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 # ---- Configuration ----
 DATA_PATH = 'outputs/clinical_data_raw.csv'
 OUTPUT_DIR = 'outputs'
-OUTPUT_PATH = f'{OUTPUT_DIR}/data_cleaned.csv'
+OUTPUT_PATH = f'{OUTPUT_DIR}/data_cleaned_v2.csv'
 TARGET = 'Readmission_30d'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -87,13 +87,60 @@ try:
             df[col] = pd.to_numeric(df[col].astype(str).str.extract(r'([\d.]+)')[0], errors='coerce')
             print(f'✓ Converted {col} to numeric')
 
-    # Standardize Gender values
+    # Standardize Gender values into a clean, fixed category set (Male/Female/Other/Unknown)
     if 'Gender' in df.columns:
-        df['Gender'] = df['Gender'].astype(str).str.strip().str.upper().replace({
-            'M': 'Male', 'MALE': 'Male', 'F': 'Female', 'FEMALE': 'Female',
-            'NAN': np.nan
-        })
-        print(f'✓ Standardized Gender values: {df["Gender"].unique().tolist()}')
+        gender_raw = df['Gender'].astype(str).str.strip().str.upper()
+        gender_map = {
+            'M': 'Male', 'MALE': 'Male', 'MAL': 'Male',
+            'F': 'Female', 'FEMALE': 'Female', 'FEMAL': 'Female',
+            'O': 'Other', 'OTHER': 'Other',
+        }
+        df['Gender'] = gender_raw.map(gender_map).fillna('Unknown')
+        print(f'✓ Standardized Gender values -> {sorted(df["Gender"].unique().tolist())}')
+        print(f'  Gender distribution:\n{df["Gender"].value_counts().to_string()}')
+
+    # Normalize Drug_Name typos/case and group into therapeutic classes
+    if 'Drug_Name' in df.columns:
+        drug_raw = df['Drug_Name'].astype(str).str.strip().str.lower()
+        drug_typo_fix = {
+            'amoxicilin': 'amoxicillin', 'amoxycillin': 'amoxicillin',
+            'atorvastain': 'atorvastatin', 'atorvastatine': 'atorvastatin',
+            'gabapentine': 'gabapentin',
+            'ibuprofin': 'ibuprofen', 'ibuprophen': 'ibuprofen',
+            'insulin  glargine': 'insulin glargine',
+            'lisinipril': 'lisinopril', 'lisino pril': 'lisinopril',
+            'met formin': 'metformin', 'metformine': 'metformin',
+            'omeprazol': 'omeprazole',
+            'tramadole': 'tramadol',
+            'warfarine': 'warfarin',
+            '': 'unknown', '-': 'unknown', '--': 'unknown',
+            'n/a': 'unknown', 'na': 'unknown', 'none': 'unknown',
+        }
+        drug_clean = drug_raw.replace(drug_typo_fix)
+        df['Drug_Name'] = drug_clean.str.title()
+
+        therapeutic_class_map = {
+            'albuterol': 'Bronchodilator', 'fluticasone': 'Corticosteroid (Respiratory)',
+            'montelukast': 'Leukotriene Modifier',
+            'amlodipine': 'Calcium Channel Blocker', 'atorvastatin': 'Statin',
+            'rosuvastatin': 'Statin', 'simvastatin': 'Statin',
+            'clopidogrel': 'Antiplatelet', 'furosemide': 'Diuretic',
+            'hydrochlorothiazide': 'Diuretic', 'lisinopril': 'ACE Inhibitor',
+            'losartan': 'ARB', 'metoprolol': 'Beta Blocker', 'warfarin': 'Anticoagulant',
+            'amoxicillin': 'Antibiotic', 'azithromycin': 'Antibiotic',
+            'ciprofloxacin': 'Antibiotic', 'doxycycline': 'Antibiotic',
+            'duloxetine': 'Antidepressant', 'escitalopram': 'Antidepressant',
+            'sertraline': 'Antidepressant',
+            'gabapentin': 'Neuropathic Pain Agent', 'tramadol': 'Opioid Analgesic',
+            'ibuprofen': 'NSAID', 'prednisone': 'Corticosteroid (Systemic)',
+            'insulin glargine': 'Insulin', 'metformin': 'Antidiabetic (Biguanide)',
+            'levothyroxine': 'Thyroid Hormone',
+            'omeprazole': 'Proton Pump Inhibitor', 'pantoprazole': 'Proton Pump Inhibitor',
+            'unknown': 'Unknown/Not Specified',
+        }
+        df['Drug_Class'] = drug_clean.map(therapeutic_class_map).fillna('Unknown/Not Specified')
+        print(f'✓ Normalized Drug_Name typos and grouped into {df["Drug_Class"].nunique()} therapeutic classes')
+        print(f'  Drug_Class distribution:\n{df["Drug_Class"].value_counts().to_string()}')
 
     print(f'Shape after validation: {df.shape} (removed {before - len(df)} rows)')
 except Exception as e:
@@ -185,7 +232,12 @@ try:
         df['Gender_encoded'] = le.fit_transform(df['Gender'].astype(str))
         print(f'✓ Label-encoded Gender -> {dict(zip(le.classes_, le.transform(le.classes_)))}')
 
-    onehot_cols = [c for c in ['Drug_Name', 'Route'] if c in df.columns]
+    # Drop the raw high-cardinality Drug_Name now that Drug_Class captures its signal
+    if 'Drug_Name' in df.columns:
+        df = df.drop(columns=['Drug_Name'])
+        print('✓ Dropped raw Drug_Name (superseded by Drug_Class)')
+
+    onehot_cols = [c for c in ['Drug_Class', 'Route'] if c in df.columns]
     if onehot_cols:
         df = pd.get_dummies(df, columns=onehot_cols, drop_first=True)
         print(f'✓ One-hot encoded: {onehot_cols}')

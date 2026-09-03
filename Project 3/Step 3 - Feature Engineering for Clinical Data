@@ -8,9 +8,9 @@ import traceback
 import pandas as pd
 import numpy as np
 
-DATA_PATH = 'outputs/data_cleaned.csv'
+DATA_PATH = 'outputs/data_cleaned_v2.csv'
 OUTPUT_DIR = 'outputs'
-OUTPUT_PATH = f'{OUTPUT_DIR}/data_engineered.csv'
+OUTPUT_PATH = f'{OUTPUT_DIR}/data_engineered_v2.csv'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 print("=" * 80)

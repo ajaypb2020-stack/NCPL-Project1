@@ -1,0 +1,139 @@
+"""Step 6 - XGBoost Gradient Boosting for 30-day Readmission Prediction."""
+import os
+import sys
+import traceback
+
+import joblib
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
+from sklearn.model_selection import train_test_split
+from xgboost import XGBClassifier
+
+DATA_PATH = 'outputs/data_engineered_v2.csv'
+OUTPUT_DIR = 'outputs'
+MODEL_PATH = f'{OUTPUT_DIR}/xgboost_best_model_v2.pkl'
+IMPORTANCE_PATH = f'{OUTPUT_DIR}/xgb_feature_importance_v2.png'
+TARGET = 'Readmission_30d'
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+print('=' * 80)
+print('STEP 6: XGBOOST GRADIENT BOOSTING CLASSIFIER')
+print('=' * 80)
+
+if not os.path.exists(DATA_PATH):
+	print(f'ERROR: File not found: {DATA_PATH}')
+	sys.exit(1)
+
+try:
+	df = pd.read_csv(DATA_PATH, low_memory=False)
+	print(f'Loaded {DATA_PATH} -> shape {df.shape}')
+except Exception as error:
+	print(f'ERROR loading data: {error}')
+	traceback.print_exc()
+	sys.exit(1)
+
+if TARGET not in df.columns:
+	print(f'ERROR: Target column "{TARGET}" not found')
+	sys.exit(1)
+
+try:
+	drop_cols = [TARGET, 'Patient_ID', 'Gender']
+	X = df.drop(columns=[column for column in drop_cols if column in df.columns])
+	y = pd.to_numeric(df[TARGET], errors='coerce')
+	valid_rows = y.notna()
+	X = X.loc[valid_rows].copy()
+	y = y.loc[valid_rows].astype(int)
+
+	categorical_cols = X.select_dtypes(include=['object', 'category']).columns.tolist()
+	if categorical_cols:
+		X = pd.get_dummies(X, columns=categorical_cols, drop_first=True)
+		print(f'One-hot encoded categorical columns: {categorical_cols}')
+
+	X = X.apply(pd.to_numeric, errors='coerce').fillna(0)
+	print(f'Features: {X.shape[1]} columns')
+	print(f'Target distribution: {y.value_counts().to_dict()}')
+except Exception as error:
+	print(f'ERROR preparing features: {error}')
+	traceback.print_exc()
+	sys.exit(1)
+
+try:
+	X_train, X_test, y_train, y_test = train_test_split(
+		X, y, test_size=0.2, random_state=42, stratify=y
+	)
+	positive_count = int(y_train.sum())
+	negative_count = len(y_train) - positive_count
+	scale_pos_weight = negative_count / positive_count if positive_count else 1.0
+	print(f'Train: {len(X_train)} rows, Test: {len(X_test)} rows')
+	print(f'Using scale_pos_weight={scale_pos_weight:.4f}')
+except Exception as error:
+	print(f'ERROR splitting data: {error}')
+	traceback.print_exc()
+	sys.exit(1)
+
+try:
+	# Histogram-based training keeps the full-data run practical on this dataset.
+	xgb_model = XGBClassifier(
+		n_estimators=200,
+		max_depth=6,
+		learning_rate=0.1,
+		subsample=0.8,
+		colsample_bytree=0.8,
+		scale_pos_weight=scale_pos_weight,
+		objective='binary:logistic',
+		eval_metric='auc',
+		tree_method='hist',
+		random_state=42,
+		n_jobs=-1,
+	)
+	xgb_model.fit(X_train, y_train)
+	print('XGBoost trained with 200 boosting rounds!')
+except Exception as error:
+	print(f'ERROR training XGBoost: {error}')
+	traceback.print_exc()
+	sys.exit(1)
+
+try:
+	y_pred_xgb = xgb_model.predict(X_test)
+	y_prob_xgb = xgb_model.predict_proba(X_test)[:, 1]
+	print(f'\nAccuracy: {accuracy_score(y_test, y_pred_xgb):.4f}')
+	print(f'AUC-ROC: {roc_auc_score(y_test, y_prob_xgb):.4f}')
+	print('\nClassification Report:')
+	print(classification_report(y_test, y_pred_xgb,
+								target_names=['Not Readmitted', 'Readmitted']))
+	print('Confusion Matrix:')
+	print(confusion_matrix(y_test, y_pred_xgb))
+except Exception as error:
+	print(f'ERROR evaluating model: {error}')
+	traceback.print_exc()
+
+try:
+	importance = pd.Series(xgb_model.feature_importances_, index=X.columns).sort_values(ascending=True)
+	print('\nTop 15 Most Important Features:')
+	print(importance.tail(15).sort_values(ascending=False))
+	plt.figure(figsize=(10, 8))
+	importance.tail(15).plot(kind='barh', color='darkorange')
+	plt.title('XGBoost - Top 15 Feature Importances')
+	plt.xlabel('Importance Score')
+	plt.tight_layout()
+	plt.savefig(IMPORTANCE_PATH, dpi=150, bbox_inches='tight')
+	plt.close()
+	print(f'Feature importance plot saved to {IMPORTANCE_PATH}')
+except Exception as error:
+	print(f'ERROR creating feature importance output: {error}')
+	traceback.print_exc()
+
+try:
+	joblib.dump(xgb_model, MODEL_PATH)
+	print(f'Model saved to {MODEL_PATH}')
+except Exception as error:
+	print(f'ERROR saving model: {error}')
+	traceback.print_exc()
+	sys.exit(1)
+
+print('\n' + '=' * 80)
+print('STEP 6: XGBOOST COMPLETE')
+print('=' * 80)

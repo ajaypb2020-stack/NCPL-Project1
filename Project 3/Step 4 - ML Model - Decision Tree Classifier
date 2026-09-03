@@ -1,0 +1,135 @@
+"""
+Step 4 - ML Model: Decision Tree Classifier for 30-day Readmission Prediction
+Loads outputs/data_engineered_v2.csv, trains a Decision Tree, evaluates it, and saves the model.
+"""
+import os
+import sys
+import traceback
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import (accuracy_score, classification_report,
+                              confusion_matrix, roc_auc_score)
+import joblib  # for saving the model
+
+DATA_PATH = 'outputs/data_engineered_v2.csv'
+OUTPUT_DIR = 'outputs'
+MODEL_PATH = f'{OUTPUT_DIR}/decision_tree_model.pkl'
+TARGET = 'Readmission_30d'
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+print("=" * 80)
+print("STEP 4: DECISION TREE CLASSIFIER")
+print("=" * 80)
+
+# ---- Load cleaned/engineered data ----
+if not os.path.exists(DATA_PATH):
+    print(f'ERROR: File not found: {DATA_PATH}')
+    sys.exit(1)
+
+try:
+    df = pd.read_csv(DATA_PATH)
+    print(f'✓ Loaded {DATA_PATH} -> shape {df.shape}')
+except Exception as e:
+    print(f'ERROR loading file: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+if TARGET not in df.columns:
+    print(f'ERROR: Target column "{TARGET}" not found. Available columns: {list(df.columns)}')
+    sys.exit(1)
+
+# ---- Prepare features (X) and target (y) ----
+try:
+    # Drop identifier / redundant columns that shouldn't be used as features
+    drop_cols = [TARGET, 'Patient_ID', 'Gender']  # raw Gender superseded by Gender_encoded
+    X = df.drop(columns=[c for c in drop_cols if c in df.columns])
+    y = df[TARGET].astype(int)
+
+    # Convert binary text flags to numeric
+    for col in ['Treatment_Outcome', 'Adverse_Event']:
+        if col in X.columns:
+            X[col] = pd.to_numeric(X[col], errors='coerce').fillna(0)
+
+    # One-hot encode any remaining non-numeric (object/category) columns
+    non_numeric_cols = X.select_dtypes(include=['object', 'category']).columns.tolist()
+    if non_numeric_cols:
+        X = pd.get_dummies(X, columns=non_numeric_cols, drop_first=True)
+        print(f'✓ One-hot encoded remaining categorical columns: {non_numeric_cols}')
+
+    # Safety net: fill any leftover missing values
+    X = X.fillna(0)
+
+    print(f'Features: {X.shape[1]} columns')
+    print(f'Target distribution: {y.value_counts().to_dict()}')
+except Exception as e:
+    print(f'ERROR preparing features/target: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+# ---- Split into training (80%) and testing (20%) ----
+try:
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )  # stratify=y ensures both sets have same class ratio
+    print(f'Train: {X_train.shape[0]} rows, Test: {X_test.shape[0]} rows')
+except Exception as e:
+    print(f'ERROR splitting data: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+# ---- Train Decision Tree ----
+try:
+    dt_model = DecisionTreeClassifier(
+        max_depth=8,             # Limit tree depth to prevent overfitting
+        min_samples_split=20,    # Need at least 20 patients to split a node
+        min_samples_leaf=10,     # Each leaf must have at least 10 patients
+        class_weight='balanced',  # Handle class imbalance automatically
+        random_state=42
+    )
+    dt_model.fit(X_train, y_train)  # Training happens here
+    print('✓ Decision Tree trained successfully!')
+except Exception as e:
+    print(f'ERROR training model: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+# ---- Predict and evaluate on test set ----
+try:
+    y_pred = dt_model.predict(X_test)
+    y_prob = dt_model.predict_proba(X_test)[:, 1]  # probability of class 1 (readmitted)
+
+    print(f'\nAccuracy: {accuracy_score(y_test, y_pred):.4f}')
+    print(f'AUC-ROC: {roc_auc_score(y_test, y_prob):.4f}')
+    print('\nClassification Report:')
+    print(classification_report(y_test, y_pred,
+                                 target_names=['Not Readmitted', 'Readmitted']))
+    print('Confusion Matrix:')
+    print(confusion_matrix(y_test, y_pred))
+except Exception as e:
+    print(f'ERROR evaluating model: {e}')
+    traceback.print_exc()
+
+# ---- Feature Importance ----
+try:
+    importance = pd.Series(dt_model.feature_importances_,
+                            index=X.columns).sort_values(ascending=False)
+    print('\nTop 10 Most Important Features:')
+    print(importance.head(10))
+except Exception as e:
+    print(f'ERROR computing feature importance: {e}')
+    traceback.print_exc()
+
+# ---- Save Model ----
+try:
+    joblib.dump(dt_model, MODEL_PATH)
+    print(f'\n✓ Model saved to {MODEL_PATH}')
+except Exception as e:
+    print(f'ERROR saving model: {e}')
+    traceback.print_exc()
+    sys.exit(1)
+
+print('\n' + '=' * 80)
+print('✓ STEP 4: DECISION TREE COMPLETE')
+print('=' * 80)
